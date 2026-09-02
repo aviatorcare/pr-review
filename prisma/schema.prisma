@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Patient {
+  id                  String               @id
+  displayName         String
+  dateOfBirth         String
+  candidateConditions CandidateCondition[]
+}
+
+model Reviewer {
+  id             String               @id
+  displayName    String
+  currentReviews CandidateCondition[] @relation("CurrentReviewer")
+  reviews        ConditionReview[]
+}
+
+model CandidateCondition {
+  id                   String            @id
+  patientId            String
+  code                 String
+  description          String
+  evidenceSummary      String
+  isRelevant           Boolean?
+  needsMoreInformation Boolean           @default(false)
+  reviewedById         String?
+  updatedAt            DateTime          @updatedAt
+  patient              Patient           @relation(fields: [patientId], references: [id])
+  reviewedBy           Reviewer?         @relation("CurrentReviewer", fields: [reviewedById], references: [id])
+  reviews              ConditionReview[]
+
+  @@index([patientId])
+}
+
+model ConditionReview {
+  id                   String             @id @default(cuid())
+  candidateConditionId String
+  reviewerId           String
+  isRelevant           Boolean?
+  needsMoreInformation Boolean            @default(false)
+  note                 String?
+  createdAt            DateTime           @default(now())
+  candidateCondition   CandidateCondition @relation(fields: [candidateConditionId], references: [id])
+  reviewer             Reviewer           @relation(fields: [reviewerId], references: [id])
+
+  @@index([candidateConditionId, createdAt])
+}
