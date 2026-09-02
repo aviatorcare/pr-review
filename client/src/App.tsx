@@ -1,3 +1,5 @@
+import { ConditionReviewQueue } from "./ConditionReviewQueue";
+
 export function App() {
   return (
     <main className="page-shell">
@@ -9,10 +11,7 @@ export function App() {
         </p>
       </header>
 
-      <section className="panel empty-state">
-        <h2>Condition review queue</h2>
-        <p>The review workflow is not enabled yet.</p>
-      </section>
+      <ConditionReviewQueue />
     </main>
   );
 }

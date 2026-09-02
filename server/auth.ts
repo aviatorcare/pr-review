@@ -7,6 +7,10 @@ export type AuthenticatedRequest = Request & {
   };
 };
 
+export function authenticatedUser(request: Request) {
+  return (request as AuthenticatedRequest).user;
+}
+
 export function demoAuth(
   request: Request,
   _response: Response,
